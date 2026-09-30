@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reserva de Salas | FEA Júnior USP</title>
+<link rel="icon" href="logo-fea.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/switzer-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Switzer';font-weight:400;font-display:swap;src:url(fonts/switzer-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Switzer';font-weight:500;font-display:swap;src:url(fonts/switzer-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Switzer';font-weight:600;font-display:swap;src:url(fonts/switzer-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Switzer';font-weight:700;font-display:swap;src:url(fonts/switzer-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Unbounded';font-weight:600;font-display:swap;src:url(fonts/unbounded-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Unbounded';font-weight:700;font-display:swap;src:url(fonts/unbounded-latin-700-normal.woff2) format('woff2')}
+:root{
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --blue:#002EC7;--sky:#0091FF;--blue-soft:#E4ECFF;
+  --paper:#F4F3EF;--card:#FFFFFF;--ink:#000207;--muted:#5B6272;--line:#DDDAD2;--soft:#ECEAE4;
+  --floor:#F6EEE2;--corr:#E9E4DA;--wood-l:#EEDFCB;--street:#2F333B;
+  --wall:#1D2330;--furn:#FFFFFF;--furn-line:#1D2330;--glass:#9CD0FF;
+  --free:#22A262;--free-soft:#DDF2E6;--busy:#D0342C;--busy-soft:#F7D2CE;--mine:#002EC7;
+  --title:'Unbounded','Arial Black',system-ui,sans-serif;
+  --text:'Switzer',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0C1220;--card:#141C2E;--ink:#EEF1F7;--muted:#A2AABB;--line:#27324A;--soft:#1B2439;--blue-soft:#15245A;
+  --floor:#1E2638;--corr:#252F45;--wood-l:#3A3024;--street:#0A0E16;--wall:#C6D0E4;--furn:#26324B;--furn-line:#B4C2DC;
+  --free-soft:#123D29;--busy-soft:#4A1C1A}}
+:root[data-theme="dark"]{
+  --paper:#0C1220;--card:#141C2E;--ink:#EEF1F7;--muted:#A2AABB;--line:#27324A;--soft:#1B2439;--blue-soft:#15245A;
+  --floor:#1E2638;--corr:#252F45;--wood-l:#3A3024;--street:#0A0E16;--wall:#C6D0E4;--furn:#26324B;--furn-line:#B4C2DC;
+  --free-soft:#123D29;--busy-soft:#4A1C1A}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:15.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--title);font-weight:600;margin:0;line-height:1.15;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:8px}
+.muted{color:var(--muted)}
+.fea-logo{display:block;height:100%;width:auto;color:var(--ink)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .logo{height:40px}
+.brand .div{width:1px;height:30px;background:var(--line)}
+.brand .app{font-family:var(--title);font-size:13px;font-weight:600;line-height:1.2}
+.brand .app small{display:block;font-family:var(--text);font-weight:500;font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:4px;background:var(--soft);padding:4px;border-radius:999px;margin-left:auto}
+.tab{border:0;background:transparent;padding:8px 16px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.me{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px 6px 6px;font-weight:600;font-size:14px}
+.me .av{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+.me:hover{border-color:var(--ink)}
+
+.btn{border:0;border-radius:999px;padding:11px 20px;font-weight:600;display:inline-flex;align-items:center;gap:8px;justify-content:center;line-height:1.2}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#0024A3}
+.btn-ghost{background:transparent;border:1.5px solid var(--line)}.btn-ghost:hover{border-color:var(--ink)}
+.btn-bad{background:transparent;color:var(--busy);border:1.5px solid var(--busy)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);display:grid;place-items:center;flex:none}
+.iconbtn:hover{border-color:var(--ink)}
+.iconbtn svg,.btn svg{width:18px;height:18px}
+.banner{max-width:1320px;margin:12px auto 0;padding:10px 16px;border-radius:12px;background:var(--busy-soft);font-size:14px;font-weight:600}
+main{max-width:1320px;margin:0 auto;padding:18px 20px 70px}
+.view{display:none}.view.on{display:block}
+
+/* barra de quando */
+.when{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px 12px;margin-bottom:16px}
+.when .lbl{font-weight:700;font-size:14px;margin-right:4px}
+.dates{display:flex;gap:6px;flex-wrap:wrap}
+.dchip{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:5px 10px;text-align:center;min-width:56px;line-height:1.2}
+.dchip small{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.dchip b{font-size:14px}
+.dchip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.dchip[aria-pressed="true"] small{color:#D7E0FF}
+.inp{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:9px 12px;width:100%}
+.inp:focus{border-color:var(--blue);outline:none}
+select.inp{width:auto}
+textarea.inp{min-height:70px;resize:vertical}
+.when .sep{flex:1}
+.sync{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--free)}
+.sync.err i{background:var(--busy)}
+
+/* mapa */
+.map-wrap{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;position:relative}
+.stage-bar{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.stage-bar h2{font-size:18px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#plan{display:block;width:100%;height:auto;aspect-ratio:1000/720;background:var(--card);touch-action:manipulation}
+.room-g{cursor:pointer;transition:opacity .45s}
+.room-g .tint{transition:opacity .2s}
+.room-g:hover .tint{opacity:.3}
+.room-g:focus{outline:none}
+.dim .room-g:not(.active){opacity:.3}
+.dim .decor{opacity:.45}
+.decor{transition:opacity .45s}
+.seat{cursor:pointer}
+.seat .shape{transition:fill .2s}
+.seat:hover .shape{stroke-width:3.5}
+.seat:focus{outline:none}.seat:focus-visible .shape{stroke:var(--sky);stroke-width:4}
+.seat-num{font-family:var(--text);font-weight:700;pointer-events:none}
+.plate-name{font-family:var(--title);font-weight:600;fill:#0A2C9E}
+.plate-st{font-family:var(--text);font-weight:700;fill:#4A5162}
+.plan-lbl{font-family:var(--text);font-weight:600;fill:var(--muted)}
+.street-lbl{font-family:var(--text);font-weight:600;fill:#9AA3B5}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:10px 14px;border-top:1px solid var(--line)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.side{display:flex;flex-direction:column;gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.panel h3{font-size:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--soft)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.room-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);text-align:left;width:100%}
+.room-row:hover{border-color:var(--ink)}
+.room-row .sw{width:34px;height:34px;border-radius:10px;flex:none}
+.room-row b{display:block;font-size:15px}
+.room-row span{font-size:13px;color:var(--muted)}
+.room-row .cnt{font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap}
+.rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.seats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin-top:12px}
+.sg{border:0;border-radius:10px;padding:8px 0;font-weight:700;font-size:14px;background:var(--free-soft);color:#15603C;line-height:1.1}
+.sg small{display:block;font-size:10px;font-weight:600;opacity:.85}
+.sg.busy{background:var(--busy-soft);color:#8E2420}
+.sg.mine{background:var(--blue);color:#fff}
+.sg:hover{outline:2px solid var(--ink);outline-offset:-2px}
+
+/* agenda (calendário) */
+.ag-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ag-head h2{font-size:24px;margin-right:auto}
+.roomtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.rtab{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+.rtab[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.cal-scroll{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:20px}
+.cal{min-width:900px;display:grid;grid-template-columns:130px 1fr}
+.cal .hd{position:sticky;top:0;background:var(--card);z-index:2;border-bottom:1px solid var(--line);height:34px}
+.cal .hours{position:relative}
+.cal .hours span{position:absolute;top:9px;font-size:12px;color:var(--muted);transform:translateX(-50%);font-variant-numeric:tabular-nums}
+.cal .rl{padding:0 12px;height:40px;display:flex;align-items:center;font-weight:600;font-size:13.5px;border-bottom:1px solid var(--line);white-space:nowrap}
+.cal .rl.all{background:var(--soft)}
+.cal .tr{position:relative;height:40px;border-bottom:1px solid var(--line);cursor:pointer;background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:calc(100%/15) 100%}
+.cal .tr.all{background-color:var(--soft)}
+.cal .tr:hover{background-color:color-mix(in srgb,var(--sky) 7%,transparent)}
+.cal .ghost{position:absolute;top:5px;bottom:5px;border-radius:7px;border:2px dashed var(--sky);pointer-events:none;display:none;font-size:11px;font-weight:700;color:var(--blue);padding-left:6px;align-items:center}
+.cal .tr:hover .ghost{display:flex}
+.blk{position:absolute;top:4px;bottom:4px;border-radius:8px;padding:0 8px;font-size:12px;font-weight:600;color:#fff;display:flex;align-items:center;overflow:hidden;white-space:nowrap;border:0;cursor:pointer;z-index:1}
+.blk.dark{color:#1C1400}
+.blk.mine{box-shadow:inset 0 0 0 2px #fff,0 0 0 2px var(--blue)}
+.blk.shadow{opacity:.28;pointer-events:none}
+.nowline{position:absolute;top:0;bottom:0;width:2px;background:var(--busy);z-index:2;pointer-events:none}
+.cal-leg{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px}
+
+/* minhas */
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.mcard .band{height:8px}
+.mcard .body{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.mcard .ttl{font-family:var(--title);font-size:15px;font-weight:600}
+.mcard .w{font-weight:600;font-variant-numeric:tabular-nums}
+.empty{padding:36px 20px;text-align:center;border:1.5px dashed var(--line);border-radius:20px;color:var(--muted);grid-column:1/-1}
+.empty h3{color:var(--ink);font-size:18px;margin-bottom:6px}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(5,10,25,.5);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--paper);z-index:60;transform:translateX(102%);transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.drawer.on{transform:none}
+.dr-head{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.dr-head h2{font-size:20px;flex:1}
+.dr-body{overflow:auto;padding:18px 20px 24px;flex:1}
+.dr-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--paper)}
+.state{border-radius:16px;padding:14px 16px;margin-bottom:18px}
+.state.busy{background:var(--busy-soft)}
+.state.free{background:var(--free-soft)}
+.state h4{font-family:var(--text);font-weight:700;font-size:16px;margin:0 0 4px}
+.state p{margin:0;font-size:14px}
+.state .btn{margin-top:10px}
+.q{margin:0 0 18px}
+.q>.lbl{font-weight:700;display:block;margin-bottom:4px}
+.help{font-size:13px;color:var(--muted);margin:0 0 10px}
+.avail{display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:2px}
+.av{height:42px;border:0;border-radius:5px;background:var(--free-soft);padding:0;position:relative}
+.av:hover{outline:2px solid var(--ink);outline-offset:-2px}
+.av.busy{background:var(--busy-soft);cursor:not-allowed}
+.av.past{background:var(--soft);cursor:not-allowed}
+.av.sel{background:var(--blue)}
+.av.mine{background:#9DB4F5}
+.avticks{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));font-size:11px;color:var(--muted);margin-top:4px}
+.times2{display:flex;gap:10px;margin-top:12px;align-items:flex-end;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:600;color:var(--muted)}
+.daylist{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:6px}
+.daylist li{display:flex;gap:10px;align-items:center;font-size:14px;padding:8px 12px;border-radius:10px;background:var(--soft)}
+.daylist b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.err{color:var(--busy);font-size:14px;font-weight:600;margin:0}
+.okmsg{color:#15603C;font-size:14px;font-weight:600;margin:0}
+
+/* modal nome */
+.modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:rgba(5,10,25,.55);padding:20px}
+.mbox{background:var(--card);border-radius:22px;padding:26px;width:min(420px,100%);display:flex;flex-direction:column;gap:14px}
+.mbox .logo{height:44px}
+.mbox h2{font-size:20px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:999px;z-index:95;opacity:0;transition:all .3s;font-weight:600;max-width:92vw;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1040px){.map-wrap{grid-template-columns:1fr}}
+@media (max-width:680px){
+  .top-in{padding:8px 12px;gap:8px}
+  .brand .logo{height:30px}.brand .div,.brand .app{display:none}
+  .tabs{order:3;width:100%;margin-left:0}.tab{flex:1;padding:8px 4px;font-size:13.5px}
+  .me{margin-left:auto}
+  main{padding:12px 10px 70px}
+  .when .sep{display:none}
+  .avail{grid-template-columns:repeat(15,minmax(0,1fr));row-gap:6px}.avticks{display:none}
+  .av{height:32px}.av::after{content:attr(data-h);position:absolute;inset:0;display:grid;place-items:center;font-size:9.5px;font-weight:600;color:#3B4252}
+  .av.sel::after{color:#fff}
+  .stage-bar h2{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><div class="logo" id="logoTop"></div><span class="div"></span><div class="app">Reserva de salas<small>Sede FEA Júnior USP</small></div></div>
+    <nav class="tabs" role="tablist" aria-label="Seções">
+      <button class="tab" role="tab" aria-selected="true" data-view="mapa">Salas</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="agenda">Calendário</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="minhas">Minhas reservas</button>
+    </nav>
+    <button class="me" id="meBtn" title="Trocar nome"><span class="av" id="meAv">?</span><span id="meNome">Entrar</span></button>
+  </div>
+</header>
+<div class="banner" id="banner" role="status" hidden></div>
+
+<main>
+  <div class="when" id="whenBar">
+    <span class="lbl">Ver ocupação em</span>
+    <div class="dates" id="dates"></div>
+    <input type="date" class="inp" id="dPick" style="width:auto" aria-label="Outra data">
+    <span class="lbl" style="margin-left:6px">às</span>
+    <select class="inp" id="hPick" aria-label="Horário"></select>
+    <span class="sep"></span>
+    <span class="sync" id="sync"><i></i><span>Carregando…</span></span>
+  </div>
+
+  <section class="view on" id="v-mapa" aria-label="Planta das salas">
+    <div class="map-wrap">
+      <div class="stage">
+        <div class="stage-bar">
+          <button class="iconbtn" id="prevRoom" aria-label="Sala anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <h2 id="stageTitle">Planta da sede</h2>
+          <button class="iconbtn" id="nextRoom" aria-label="Próxima sala"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+          <button class="btn btn-ghost" id="zoomOut" hidden>Ver a sede toda</button>
+        </div>
+        <svg id="plan" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Planta da sede com as cadeiras"></svg>
+        <div class="legend"><span><i style="background:var(--free)"></i>Livre</span><span><i style="background:var(--busy)"></i>Reservada</span><span><i style="background:var(--mine)"></i>Sua reserva</span><span>Toque numa sala para entrar e depois numa cadeira</span></div>
+      </div>
+      <aside class="side" id="side"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-agenda" aria-label="Calendário">
+    <div class="ag-head"><h2 id="agTitle">Calendário</h2></div>
+    <div class="roomtabs" id="roomTabs"></div>
+    <div class="cal-scroll"><div class="cal" id="cal"></div></div>
+    <div class="cal-leg"><span>Cada linha é um lugar. Clique num espaço vazio para reservar a partir daquele horário.</span><span>Reservas da sala inteira bloqueiam todas as cadeiras.</span></div>
+  </section>
+
+  <section class="view" id="v-minhas" aria-label="Minhas reservas">
+    <div class="ag-head"><h2>Minhas reservas</h2></div>
+    <div class="list" id="minhas"></div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drTitle">
+  <div class="dr-head"><h2 id="drTitle">Reservar</h2><button class="iconbtn" id="drClose" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="dr-body" id="drBody"></div>
+  <div class="dr-foot" id="drFoot"></div>
+</aside>
+
+<div class="modal" id="modal" hidden>
+  <form class="mbox" id="mForm">
+    <div class="logo" id="logoModal"></div>
+    <h2>Quem está reservando?</h2>
+    <p class="muted" style="margin:0;font-size:14px">Seu nome aparece nas reservas para os colegas saberem quem está usando o lugar. Fica salvo neste aparelho.</p>
+    <div class="field"><label for="mNome">Seu nome</label><input class="inp" id="mNome" maxlength="60" autocomplete="name" placeholder="Nome e sobrenome"></div>
+    <div class="field" id="mCodWrap" hidden><label for="mCod">Código de acesso da empresa</label><input class="inp" id="mCod" maxlength="60" autocomplete="off"></div>
+    <div class="field" id="mDirWrap" hidden><label for="mDir">Código da diretoria (permite cancelar qualquer reserva)</label><input class="inp" id="mDir" maxlength="60" autocomplete="off"></div>
+    <p class="err" id="mErr"></p>
+    <button class="btn btn-primary" type="submit">Continuar</button>
+  </form>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
